@@ -1,0 +1,10 @@
+[package]
+name = "gen"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+clap = { version = "4.6.0", features = ["derive"] }
+fumen = "0.1.2"
+itertools = "0.14.0"
+rayon = "1.11.0"
