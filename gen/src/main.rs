@@ -14,8 +14,10 @@ const PIECES: &str = "TIJLOSZ";
 
 #[derive(Parser)]
 pub struct Program {
-    second: String,
-    save: String,
+    #[arg(short)]
+    t: String,
+    #[arg(short)]
+    save: Option<String>,
     #[arg(short)]
     path: Option<String>,
 }
@@ -31,6 +33,7 @@ enum QueueStatus {
 
 /// Shared progress structure used for both active and done categories.
 pub struct Progress {
+    label: String,
     active: Vec<String>,
     done_min1: Vec<String>,
     done_min2: Vec<String>,
@@ -38,9 +41,10 @@ pub struct Progress {
     done_3p: Vec<String>,
 }
 
-impl Default for Progress {
-    fn default() -> Self {
+impl Progress {
+    fn new(label: String) -> Self {
         Self {
+            label,
             active: vec![],
             done_min1: vec![],
             done_min2: vec![],
@@ -156,6 +160,7 @@ impl Progress {
 
         // Line 1: active
         print!("\x1b[2K\r");
+        print!("label      : {}\n", self.label);
         print!("active     : ({})\n", active_list);
 
         // Line 2: done min1
@@ -187,8 +192,8 @@ fn do_redraw_nolock(progress: &Arc<Mutex<Progress>>) {
 
 fn main() {
     let program = Program::parse();
-    let second = Arc::new(program.second);
-    let save = Arc::new(program.save);
+    let second = Arc::new(program.t);
+    let save = Arc::new(program.save.unwrap_or_else(String::new));
     let path = Arc::new(program.path.unwrap_or_else(|| second.as_ref().clone()));
 
     // Writer for incremental file writes
@@ -205,7 +210,7 @@ fn main() {
     }
 
     // Shared progress (replaces separate active/done)
-    let progress = Arc::new(Mutex::new(Progress::default()));
+    let progress = Arc::new(Mutex::new(Progress::new(second.to_string())));
 
     // Console mutex so redraws don't interleave with other output
     let console = Arc::new(Mutex::new(()));
@@ -226,18 +231,22 @@ fn main() {
         Three(String), // "ABC"
     }
 
-    let save_char = save.chars().next().unwrap();
+    let save_char = save.chars().next();
     let mut work: Vec<WorkItem> = Vec::new();
     for c in PIECES.chars().combinations(2) {
         let a = c[0];
         let b = c[1];
-        if a == save_char || b == save_char {
+        if let Some(s) = save_char
+            && (a == s || b == s)
+        {
             continue;
         }
         work.push(WorkItem::Two(format!("{}{}", a, b)));
     }
     for c in PIECES.chars().combinations(3) {
-        if c.contains(&save_char) {
+        if let Some(s) = save_char
+            && c.contains(&s)
+        {
             continue;
         }
         work.push(WorkItem::Three(format!("{}{}{}", c[0], c[1], c[2])));
@@ -517,15 +526,25 @@ fn call(setup: &str, save: &str, p2: &str, ordered: bool) -> (String, String) {
         format!("{},{},{}", save, p2, remaining)
     };
 
-    let o = Command::new("../qb_finder/target/release/qb_finder_cli")
+    let solve = solve.trim_start_matches(",");
+
+    let mut cc = Command::new("/home/mina/docs/qb_finder/target/release/qb_finder_cli");
+    let c = cc
         .arg("--build-queue")
         .arg(setup)
         .arg("--solve-queue")
         .arg(&solve)
         .arg("--saves")
         .arg(save)
-        .output()
-        .expect("failed to run qb_finder_cli");
+        .arg("--cover");
+    println!(
+        "/home/mina/docs/qb_finder/target/release/qb_finder_cli {}",
+        c.get_args()
+            .map(|x| x.to_string_lossy())
+            .collect::<Vec<_>>()
+            .join(" ")
+    );
+    let o = c.output().expect("failed to run qb_finder_cli");
 
     let t = String::from_utf8_lossy(&o.stdout).to_string();
     let mut z = t.trim().split(';');
@@ -560,6 +579,7 @@ fn call3p(setup: &str, save: &str, p3: &str, ordered: Grouping) -> (String, Stri
         .arg(&solve)
         .arg("--saves")
         .arg(save)
+        .arg("--cover")
         .output()
         .expect("failed to run qb_finder_cli");
 

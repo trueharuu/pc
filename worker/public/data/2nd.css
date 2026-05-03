@@ -1,0 +1,191 @@
+@import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap");
+
+:root {
+    color-scheme: light dark;
+}
+
+.empty {
+    background-color: light-dark(#fff, #282c33);
+}
+.oqb {
+    background-color: light-dark(#fdd, #534);
+}
+.otherqb {
+    background-color: light-dark(#ffd, #554);
+}
+.qb {
+    background-color: light-dark(#dfd, #354);
+}
+.disabled {
+    background-color: light-dark(#ddd, #383c43);
+}
+.p3 {
+    background-color: light-dark(#ddf, #346);
+}
+
+.ptr {
+    color: light-dark(#0002, #fff2);
+}
+
+body {
+    display: grid;
+    grid-template-columns: 20% 60% 20%;
+    font-family: "Source Serif 4", serif;
+    font-size: 12pt;
+    background-color: light-dark(#fff, #282c33);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: normal;
+    width: max-content;
+}
+
+h1 {
+    font-size: 20pt;
+}
+
+.title {
+    font-size: 2.5em;
+    font-weight: bolder;
+}
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+    /*border: 2px;*/
+    break-inside: avoid-page;
+}
+
+li::marker {
+    content: "";
+}
+
+td {
+    border: 1.5px solid light-dark(#aaa, #99b);
+    min-width: 3rem;
+    padding: 0.25rem;
+    text-align: center;
+    vertical-align: middle;
+    /* align-items: center; */
+}
+
+#p2con {
+    text-align: center;
+}
+
+a {
+    color: light-dark(#0095aa, #abf);
+    text-decoration: dotted underline;
+}
+
+.nobreak {
+    page-break-before: avoid;
+    page-break-after: avoid;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    display: inline-block;
+    width: 100%;
+}
+
+table.fumen {
+    height: 40px;
+    page-break-before: avoid;
+    page-break-after: avoid;
+    break-inside: avoid;
+    page-break-inside: avoid;
+}
+
+.fc {
+    padding: 0;
+    min-width: 20px;
+    height: 16px;
+    border: none;
+}
+
+.hlr {
+    height: 4px;
+}
+.hlc {
+    padding: 0;
+    min-width: 20px;
+    height: 4px;
+    border: none;
+}
+
+.c1 {
+    background-color: #42afe1;
+}
+
+.c2 {
+    background-color: #f38927;
+}
+
+.c3 {
+    background-color: #f6d03c;
+}
+
+.c4 {
+    background-color: #eb4f65;
+}
+
+.c5 {
+    background-color: #9739a2;
+}
+
+.c6 {
+    background-color: #1165b5;
+}
+
+.c7 {
+    background-color: #51b84d;
+}
+
+.c8 {
+    background-color: #868686;
+}
+
+.c0 {
+    background-color: #00000000;
+}
+
+.h1 {
+    background-color: #6fecff;
+}
+
+.h2 {
+    background-color: #ffba5a;
+}
+
+.h3 {
+    background-color: #ffff7f;
+}
+
+.h4 {
+    background-color: #ff827c;
+}
+
+.h5 {
+    background-color: #dc5cec;
+}
+
+.h6 {
+    background-color: #359bfe;
+}
+
+.h7 {
+    background-color: #86f882;
+}
+
+.h8 {
+    background-color: #dddddd;
+}
+
+.h0 {
+    background-color: #00000000;
+}

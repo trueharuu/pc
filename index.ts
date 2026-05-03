@@ -42,10 +42,22 @@ const server = Bun.serve({
 
                 const sh = Bun.file("./data/2nd.html");
                 const script = `<script>const text = \`${content}\`; const should_mirror = ${mir};</script>`;
+
+                const fa = Bun.file("./data/fumen.js");
+                const fb = Bun.file("./data/2nd.js");
+                const fc = Bun.file("./data/2nd.css");
+
+                const prelim = `<script defer>${await fa.text()}</script><script defer>${await fb.text()}</script><style>${await fc.text()}</style>`;
+                console.log(prelim);
                 const html = await sh.text();
-                return new Response(html.replace("<!--SCRIPT-->", script), {
-                    headers: { "Content-Type": "text/html" },
-                });
+                return new Response(
+                    html
+                        .replace("<!--SCRIPT-->", script)
+                        .replace("<!--PRELIM-->", prelim),
+                    {
+                        headers: { "Content-Type": "text/html" },
+                    },
+                );
             } else {
                 return new Response("not found", { status: 404 });
             }
